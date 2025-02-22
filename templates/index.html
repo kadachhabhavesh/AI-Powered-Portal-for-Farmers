@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Body styling */
+        body {
+            background: linear-gradient(135deg, #1f4037, #99f2c8);
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Card styling */
+        .card {
+            max-width: 600px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px 30px;
+            background-color: #fff;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 2rem;
+            color: #1f4037;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Upload section styling */
+        .upload-section {
+            border: 3px dashed #99f2c8;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .upload-section:hover {
+            background-color: #f0f5f5;
+            border-color: #1f4037;
+        }
+
+        /* Button styling */
+        .btn-custom {
+            background-color: #1f4037;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #99f2c8;
+            color: #1f4037;
+            transform: translateY(-2px);
+        }
+
+        /* Smaller Image preview styling */
+        .img-preview {
+            margin-top: 25px;
+            max-width: 60%; /* Reduce size to 60% of the container width */
+            border-radius: 15px;
+            display: none;
+            transition: transform 0.3s ease;
+        }
+
+        .img-preview:hover {
+            transform: scale(1.05);
+        }
+
+        /* Result styling */
+        #result {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 25px;
+            color: #1f4037;
+            line-height: 1.5;
+        }
+
+        /* File icon */
+        .file-icon {
+            font-size: 2.5rem;
+            color: #99f2c8;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🌱 Plant Disease Detection</h1>
+
+        <!-- Upload Section -->
+        <div class="upload-section" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-cloud-upload-alt file-icon"></i>
+            <p id="uploadText">Click to upload an image</p>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)" style="display: none;">
+
+        <!-- Button to submit for prediction -->
+        <button class="btn btn-custom" onclick="submitImage()">Upload and Predict</button>
+
+        <!-- Image Preview -->
+        <img id="imgPreview" class="img-preview" alt="Image Preview" />
+
+        <!-- Prediction Result -->
+        <p id="result"></p>
+    </div>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let selectedFile;
+
+        function handleFileSelect(event) {
+            selectedFile = event.target.files[0];
+            document.getElementById("uploadText").innerText = selectedFile.name;
+
+            const imgPreview = document.getElementById("imgPreview");
+            imgPreview.src = URL.createObjectURL(selectedFile);
+            imgPreview.style.display = 'block';
+        }
+
+        async function submitImage() {
+            if (!selectedFile) {
+                document.getElementById("result").innerText = "Please select a file first.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+
+            try {
+                const response = await fetch('/predict', { method: 'POST', body: formData });
+                const result = await response.json();
+                document.getElementById("result").innerHTML = 
+                    `<span style="color: #1f4037;">Prediction:</span> ${result.class}<br>
+                     <span style="color: #1f4037;">Confidence:</span> ${(result.confidence * 100).toFixed(2)}%`;
+            } catch (error) {
+                document.getElementById("result").innerText = "Error in prediction. Please try again.";
+            }
+        }
+    </script>
+</body>
+</html>
