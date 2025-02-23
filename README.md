@@ -1,7 +1,7 @@
-# AI-Powered Mobile Portal for Farmers
+# AI-Powered  Portal for Farmers
 
 ## Project Overview
-The AI-Powered Mobile Portal for Farmers is an advanced solution designed to detect diseases in crops and livestock. It provides instant diagnosis and suggests suitable treatments based on AI analysis. Farmers can upload images or symptoms, and the system will recommend preventive measures, chemical and organic treatments, and other essential information for effective disease management.
+The AI-Powered   Portal for Farmers is an advanced solution designed to detect diseases in crops and livestock. It provides instant diagnosis and suggests suitable treatments based on AI analysis. Farmers can upload images or symptoms, and the system will recommend preventive measures, chemical and organic treatments, and other essential information for effective disease management.
 
 ## Features
 - **AI-Powered Disease Detection**: Analyzes images and symptoms to identify diseases in crops and livestock.
